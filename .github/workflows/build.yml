@@ -1,4 +1,4 @@
-name: "[TWRP][dubai] Moto Edge 30"
+name: "[TWRP][realme]RMX2151"
 
 on:
   workflow_dispatch:
@@ -25,8 +25,8 @@ jobs:
             sudo -E apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig >/dev/null 2>&1
             sudo -E curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
             sudo -E chmod a+rx /usr/local/bin/repo
-            git config --global user.name "Pranav Talmale"
-            git config --global user.email "pranavtalmale@gmail.com"     
+            git config --global user.name "Gofaraway71"
+            git config --global user.email "aalbatron@gmail.com"     
              
        - name: "Sync & compile"
          run: |
@@ -41,7 +41,7 @@ jobs:
             cd bootable/recovery
             git fetch https://gerrit.twrp.me/android_bootable_recovery refs/changes/05/5405/26 && git cherry-pick FETCH_HEAD
             cd ~/twrp
-            git clone https://github.com/Pranav-Talmale/android_device_xiaomi_lisa --depth=1 -b port-dubai device/xiaomi/lisa
+            git clone https://github.com/Gofaraway71/twrp-RMX2151-A12.1 --depth=1 -b main device/realme/RMX2151
             . build/envsetup.sh && lunch twrp_dubai-eng && mka bootimage -j4
       
        - uses: actions/upload-artifact@v2
