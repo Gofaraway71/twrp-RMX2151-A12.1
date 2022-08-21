@@ -32,7 +32,7 @@ jobs:
             sudo -E curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
             sudo -E chmod a+rx /usr/local/bin/repo
             git config --global user.name "Gofaraway71"
-            git config --global user.email "aalbatron@gmail.com"     
+            git config --global user.email "abdou.bens34000@gmail.com"
              
        - name: "Sync & compile"
          run: |
