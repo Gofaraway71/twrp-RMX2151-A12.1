@@ -12,7 +12,7 @@ env:
   TARGET: recoveryimage
   TZ: Asia/Kolkata
   
-  jobs:
+jobs:
   build:
     runs-on: ubuntu-latest
 
