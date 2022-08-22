@@ -28,7 +28,7 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/recovery/root,recovery/root)
 
 # Device specific configs.
-$(call inherit-product, device/realme/RMX2121/device.mk)
+$(call inherit-product, device/realme/RMX2151/device.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2151
