@@ -1,12 +1,29 @@
+import /tee.rc
+import /trustonic.rc
+
 on init
     mkdir /mnt/vendor/persist
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
     setprop persist.sys.firstlaunch false
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
+
+# We need vold early for metadata encryption
+on early-fs
+    start vold
+
+on late-fs
+    # Wait for keymaster
+    exec_start wait_for_keymaster
     
 on fs
     install_keyring
     setprop crypto.ready 1
     write /sys/class/power_supply/usb/otg_switch 1
+    write /sys/class/oplus_chg/usb/otg_switch 1
+    
+on post-fs
+    start boot-1-1
+    start mtk.plpath.utils.link    
 
 service keystore_auth /system/bin/keystore_auth
     oneshot
@@ -14,6 +31,14 @@ service keystore_auth /system/bin/keystore_auth
     group root
     disabled
     seclabel u:r:recovery:s0
+    
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    class main
+    user root
+    group root system
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0    
 
 service keystore /system/bin/keystore /tmp/misc/keystore
     user root
@@ -37,7 +62,10 @@ service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-se
     disabled
     seclabel u:r:recovery:s0
 
-service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.trustonic
+service keymaster-4-1-trustonic /vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    interface android.hardware.keymaster@4.1::IKeymasterDevice default
+    class early_hal
     user root
     group root drmrpc
     disabled
@@ -64,35 +92,51 @@ service vendor.vibrator-1-0 system/bin/android.hardware.vibrator@1.0-service
     group root
     disabled
     seclabel u:r:recovery:s0
-  
+    
+on property:vendor.sys.listeners.registered=true
+    start mobicore
+    start keymaster-4-1-trustonic
+    start gatekeeper-1-0  
+
 on property:hwservicemanager.ready=true
     start hal_cryptoeng_oppo
     start mobicore
-    start keymaster-4-0
+    start keymaster-4-1-trustonic
     start gatekeeper-1-0
 
 on property:ro.crypto.state=unsupported
     stop hal_cryptoeng_oppo
     stop mobicore
-    stop keymaster-4-0
+    stop  keymaster-4-1-trustonic
     stop gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
     stop hal_cryptoeng_oppo
     stop mobicore
-    stop keymaster-4-0
+    stop  keymaster-4-1-trustonic
     stop gatekeeper-1-0
+    
+on property:ro.crypto.state=encrypted
+    stop mobicore
+    stop vendor.keymaster-4-1-trustonic
+    stop vendor.gatekeeper-1-0  
+    
+on property:crypto.ready=0
+    stop mobicore
+    stop keymaster-4-1-trustonic
+    stop gatekeeper-1-0
+    stop servicemanager    
 
 on property:twrp.decrypt.done=true
     stop hal_cryptoeng_oppo
     stop mobicore
-    stop keymaster-4-0
+    stop  keymaster-4-1-trustonic
     stop gatekeeper-1-0
 #    
 on property:enable.fbe.service=0
     stop hal_cryptoeng_oppo
     stop mobicore
-    stop keymaster-4-0
+    stop keymaster-4-1-trustonic
     stop gatekeeperd
     stop vendor.gatekeeper-1-0    
 
