@@ -1,11 +1,17 @@
 # mount point    fstype    device                       device2               flags
-/recovery        emmc      /dev/block/by-name/recovery    flags=backup=1;display="Recovery"
-/boot            emmc      /dev/block/by-name/boot        flags=backup=1;display="Boot";flashimg=1
-/cache           ext4      /dev/block/by-name/cache       flags=backup=1;display="Cache";wipeingui
-/dtbo            emmc      /dev/block/by-name/dtbo        flags=backup=1;display="DTBO";flashimg=1
-/vbmeta          emmc      /dev/block/by-name/vbmeta      flags=backup=1;display="VBMeta";flashimg=1
+
+# Common partition
+/boot             emmc    /dev/block/by-name/boot                     flags=backup=1;display="Boot";flashimg=1
+/cache            ext4    /dev/block/by-name/cache                    flags=backup=1;display="Cache";wipeingui
+/dtbo             emmc    /dev/block/by-name/dtbo                     flags=backup=1;display="DTBO";flashimg=1
+/recovery         emmc    /dev/block/by-name/recovery                 flags=backup=1;display="Recovery"
+/vbmeta           emmc    /dev/block/by-name/vbmeta                   flags=backup=1;display="VBMeta";flashimg=1
+/metadata         ext4      /dev/block/by-name/md_udc                 flags=display="Metadata"
+/data             ext4    /dev/block/by-name/userdata                 flags=fileencryption=aes-256-xts:aes-256-cts,keydirectory=/metadata/vold/metadata_encryption
+
+
 /persist         ext4      /dev/block/by-name/persist     flags=display="Persist";backup=1;
-/metadata        ext4      /dev/block/by-name/md_udc      flags=display="Metadata"
+
 /tee1            emmc      /dev/block/by-name/tee1        flags=backup
 /tee2            emmc      /dev/block/by-name/tee2        flags=backup
 /persistent      emmc      /dev/block/by-name/frp         flags=backup
@@ -15,13 +21,6 @@
 /expdb           emmc      /dev/block/by-name/expdb
 /seccfg          emmc      /dev/block/by-name/seccfg
 /para            emmc      /dev/block/by-name/para
-
-/data            ext4      /dev/block/by-name/userdata    fileencryption=aes-256-xts:aes-256-cts:v1
-/data            f2fs      /dev/block/by-name/userdata    fileencryption=aes-256-xts:aes-256-cts:v1
-
-/cache            ext4      /dev/block/by-name/cache    flags=backup
-/cache            f2fs      /dev/block/by-name/cache    flags=backup
-
 
 # IMEI and modem related
 # below four partitions are ext4, but we are using only for backup so emmc
