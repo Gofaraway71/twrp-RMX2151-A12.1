@@ -14,7 +14,8 @@ on early-fs
 on late-fs
     # Wait for keymaster
     exec_start wait_for_keymaster
-    
+    mount_all /vendor/etc/fstab.${ro.boot.hardware.platform} --late
+  
 on fs
     install_keyring
     setprop crypto.ready 1
