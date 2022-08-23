@@ -43,14 +43,15 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery
 
-# Keystore
-# PRODUCT_PACKAGES += \
-   # android.system.keystore2
-
-# Keymaster
+# Gatekeeper
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1
+	android.hardware.gatekeeper@1.0-service \
+	android.hardware.gatekeeper@1.0-impl
 
-# HACK: Set vendor patch level
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.build.security_patch=2099-12-31 
+# Additional Libraries
+TARGET_RECOVERY_DEVICE_MODULES += \
+	libkeymaster4 \
+	libpuresoftkeymasterdevice
+
+RECOVERY_LIBRARY_SOURCE_FILES += \
+	$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
