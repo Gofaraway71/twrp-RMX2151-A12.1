@@ -13,10 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+# API
+PRODUCT_SHIPPING_API_LEVEL := 31
+PRODUCT_TARGET_VNDK_VERSION := 31
 
 # Dynamic
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
+# bootctrl
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-mtkimpl \
+    android.hardware.boot@1.2-mtkimpl.recovery
 
 # fastbootd
 PRODUCT_PACKAGES += \
@@ -43,15 +50,24 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery
 
+# keystore2
+PRODUCT_PACKAGES += \
+    android.system.keystore2
+    
 # Gatekeeper
 PRODUCT_PACKAGES += \
 	android.hardware.gatekeeper@1.0-service \
 	android.hardware.gatekeeper@1.0-impl
+	
+# keymint
+PRODUCT_PACKAGES += \
+    android.hardware.security.keymint \
+    android.hardware.security.secureclock \
+    android.hardware.security.sharedsecret	
 
-# Additional Libraries
+# Additional Target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
-	libkeymaster4 \
-	libpuresoftkeymasterdevice
+    android.hardware.keymaster@4.1
 
 RECOVERY_LIBRARY_SOURCE_FILES += \
 	$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
@@ -60,3 +76,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.crypto.volume.metadata.method=dm-default-key \
     ro.crypto.dm_default_key.options_format.version=2 \
     ro.crypto.volume.options=::v2	
+    
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so
