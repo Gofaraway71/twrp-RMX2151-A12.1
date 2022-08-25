@@ -20,10 +20,6 @@ PRODUCT_TARGET_VNDK_VERSION := 31
 # Dynamic
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-# bootctrl
-PRODUCT_PACKAGES += \
-    android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery
 
 # fastbootd
 PRODUCT_PACKAGES += \
@@ -72,9 +68,12 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
 	$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
 	
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.crypto.volume.metadata.method=dm-default-key \
-    ro.crypto.dm_default_key.options_format.version=2 \
-    ro.crypto.volume.options=::v2	
+       fbe.data.wrappedkey=true  \
+       ro.crypto.dm_default_key.options_format.version=2 \
+       ro.crypto.volume.filenames_mode=aes-256-cts \
+       ro.crypto.volume.metadata.method=dm-default-key \
+       ro.crypto.volume.options=::v2 \
+       ro.crypto.allow_encrypt_override=true
     
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so
