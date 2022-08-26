@@ -119,8 +119,8 @@ on property:ro.crypto.state=unencrypted
     
 on property:ro.crypto.state=encrypted
     stop mobicore
-    stop vendor.keymaster-4-1-trustonic
-    stop vendor.gatekeeper-1-0  
+    stop keymaster-4-1-trustonic
+    stop gatekeeper-1-0  
     
 on property:crypto.ready=0
     stop mobicore
@@ -131,7 +131,7 @@ on property:crypto.ready=0
 on property:twrp.decrypt.done=true
     stop hal_cryptoeng_oppo
     stop mobicore
-    stop  keymaster-4-1-trustonic
+    stop keymaster-4-1-trustonic
     stop gatekeeper-1-0
 #    
 on property:enable.fbe.service=0
@@ -139,7 +139,7 @@ on property:enable.fbe.service=0
     stop mobicore
     stop keymaster-4-1-trustonic
     stop gatekeeperd
-    stop vendor.gatekeeper-1-0    
+    stop gatekeeper-1-0    
 
 on property:sys.usb.config=fastboot
     start servicemanager
