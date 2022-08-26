@@ -11,6 +11,10 @@ on post-fs
 
     # Create mcRegistry to store failure record
     mkdir /mnt/vendor/persist/mcRegistry 0771 system system
+    #ifdef OPLUS_FEATURE_SECURITY_COMMON
+    #Meilin.Zhou@BSP.Security.Basic,2020/10/21,Add for set property of Store_1.tf
+    chown system system /mnt/vendor/persist/mcRegistry/Store_1.tf
+    #endif /*OPLUS_FEATURE_SECURITY_COMMON*/
 
 on post-fs-data
     # Create /data/vendor/key_provisioning dir and get proper encryption policy installed
