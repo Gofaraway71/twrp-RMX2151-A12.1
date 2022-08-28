@@ -1,8 +1,12 @@
+import /init.recovery.microtrust.rc
+
 on init
     mkdir /mnt/vendor/persist
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
     setprop persist.sys.firstlaunch false
-    
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
+    export PATH /sbin:/system/bin:/vendor/bin:/vendor/bin/hw
+
 on fs
     install_keyring
     setprop crypto.ready 1
@@ -27,13 +31,6 @@ service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry 
     -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin
     user root
     group root
-    disabled
-    seclabel u:r:recovery:s0
-
-#Add for OPPO FBE
-service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
-    user root
-    group root drmrpc
     disabled
     seclabel u:r:recovery:s0
 
@@ -66,7 +63,6 @@ service vendor.vibrator-1-0 system/bin/android.hardware.vibrator@1.0-service
     seclabel u:r:recovery:s0
   
 on property:hwservicemanager.ready=true
-    start hal_cryptoeng_oppo
     start mobicore
     start keymaster-4-0
     start gatekeeper-1-0
@@ -88,7 +84,6 @@ on property:ro.crypto.state=unencrypted
     stop gatekeeper-1-0
 
 on property:twrp.decrypt.done=true
-    stop hal_cryptoeng_oppo
     stop mobicore
     stop servicemanager
     stop hwservicemanager
@@ -96,7 +91,6 @@ on property:twrp.decrypt.done=true
     stop gatekeeper-1-0
 #    
 on property:enable.fbe.service=0
-    stop hal_cryptoeng_oppo
     stop mobicore
     stop servicemanager
     stop hwservicemanager
