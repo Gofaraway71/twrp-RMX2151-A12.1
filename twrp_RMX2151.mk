@@ -26,10 +26,8 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/recovery/root,recovery/root)
 
-# Fastbootd
-PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.0-impl-mock \
-    android.hardware.fastboot@1.0-impl-mock.recovery
+# Inherit from garden device
+$(call inherit-product, device/xiaomi/garden/device.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2151
@@ -38,6 +36,3 @@ PRODUCT_BRAND := realme
 PRODUCT_MODEL := realme 7
 PRODUCT_MANUFACTURER := realme
 
-# HACK: Set vendor patch level
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.build.security_patch=2099-12-31
