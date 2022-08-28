@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/xiaomi/garden
+LOCAL_PATH := device/realme/RMX2151
 
 # Dynamic Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
@@ -28,7 +28,7 @@ PRODUCT_PACKAGES += \
 
 # MT6762 Init
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/recovery/root/init.recovery.mt6765.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.mt6762.rc
+	$(LOCAL_PATH)/recovery/root/init.recovery.mt6785.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.mt6785.rc
 
 # Gatekeeper
 PRODUCT_PACKAGES += \
@@ -36,8 +36,8 @@ PRODUCT_PACKAGES += \
 	android.hardware.gatekeeper@1.0-impl
 
 PRODUCT_COPY_FILES += \
-	$(OUT_DIR)/target/product/garden/vendor/bin/hw/android.hardware.gatekeeper@1.0-service:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.gatekeeper@1.0-service \
-	$(OUT_DIR)/target/product/garden/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so
+	$(OUT_DIR)/target/product/RMX2151/vendor/bin/hw/android.hardware.gatekeeper@1.0-service:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.gatekeeper@1.0-service \
+	$(OUT_DIR)/target/product/RMX2151/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so
 
 # Additional Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
