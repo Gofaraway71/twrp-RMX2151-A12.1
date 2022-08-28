@@ -74,6 +74,7 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=adb
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
     setprop sys.usb.state ${sys.usb.config}
+    start adbd
 
 on property:sys.usb.config=mtp
     setprop sys.usb.ffs.mtp.ready 1
@@ -110,3 +111,4 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
     setprop sys.usb.state ${sys.usb.config}
+    start adbd
