@@ -10,6 +10,7 @@ on init
     setprop vendor.usb.acm_port1 ""
     setprop vendor.usb.acm_enable 0
     setprop sys.usb.configfs 1
+    start adbd
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
