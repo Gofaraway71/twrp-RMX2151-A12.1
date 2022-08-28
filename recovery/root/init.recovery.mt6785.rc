@@ -68,7 +68,6 @@ on property:hwservicemanager.ready=true
     start gatekeeper-1-0
 
 on property:ro.crypto.state=unsupported
-    stop hal_cryptoeng_oppo
     stop mobicore
     stop servicemanager
     stop hwservicemanager
@@ -76,7 +75,6 @@ on property:ro.crypto.state=unsupported
     stop gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
-    stop hal_cryptoeng_oppo
     stop mobicore
     stop servicemanager
     stop hwservicemanager
