@@ -69,29 +69,21 @@ on property:hwservicemanager.ready=true
 
 on property:ro.crypto.state=unsupported
     stop mobicore
-    stop servicemanager
-    stop hwservicemanager
     stop keymaster-4-0
     stop gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
     stop mobicore
-    stop servicemanager
-    stop hwservicemanager
     stop keymaster-4-0
     stop gatekeeper-1-0
 
 on property:twrp.decrypt.done=true
     stop mobicore
-    stop servicemanager
-    stop hwservicemanager
     stop keymaster-4-0
     stop gatekeeper-1-0
 #    
 on property:enable.fbe.service=0
     stop mobicore
-    stop servicemanager
-    stop hwservicemanager
     stop keymaster-4-0
     stop gatekeeperd
     stop vendor.gatekeeper-1-0    
