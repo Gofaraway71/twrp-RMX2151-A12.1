@@ -27,7 +27,6 @@ system_ext      /system_ext             auto            logical
 /cam_vpu1         emmc     /dev/block/platform/bootdevice/by-name/cam_vpu1
 /cam_vpu2         emmc     /dev/block/platform/bootdevice/by-name/cam_vpu2
 /cam_vpu3         emmc     /dev/block/platform/bootdevice/by-name/cam_vpu3
-/cdt_engineering  emmc     /dev/block/platform/bootdevice/by-name/cdt_engineering
 /gz1              emmc     /dev/block/platform/bootdevice/by-name/gz1
 /gz2              emmc     /dev/block/platform/bootdevice/by-name/gz2
 /logo             emmc     /dev/block/platform/bootdevice/by-name/logo              flags=display="Logo";backup=1;flashimg=1
