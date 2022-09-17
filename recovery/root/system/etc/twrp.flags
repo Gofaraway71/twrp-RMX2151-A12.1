@@ -4,8 +4,8 @@ product         /product                auto            display="Product";logica
 odm             /odm                    auto            display="ODM";logical
 system_ext      /system_ext             auto            logical
 
-/data             ext4     /dev/block/platform/bootdevice/by-name/userdata          flags=fileencryption=aes-256-xts:v2
-/data             f2fs     /dev/block/platform/bootdevice/by-name/userdata          flags=fileencryption=aes-256-xts:v2
+/data             ext4     /dev/block/platform/bootdevice/by-name/userdata          flags=fileencryption=aes-256-xts
+/data             f2fs     /dev/block/platform/bootdevice/by-name/userdata          flags=fileencryption=aes-256-xts
 /cache            ext4     /dev/block/platform/bootdevice/by-name/cache             flags=backup=1;wipeingui;wipeduringfactoryreset
 /boot             emmc     /dev/block/platform/bootdevice/by-name/boot              flags=backup=1;flashimg=1
 /dtbo             emmc     /dev/block/platform/bootdevice/by-name/dtbo              flags=display="dtbo";backup=1;flashimg=1
