@@ -18,7 +18,6 @@ system_ext      /system_ext             auto            logical
 /nvram            emmc     /dev/block/platform/bootdevice/by-name/nvram             flags=display="NVRAM";backup=1
 /nvcfg            ext4     /dev/block/platform/bootdevice/by-name/nvcfg             flags=display="NVCFG";backup=1;subpartitionof=/nvram
 /nvdata           ext4     /dev/block/platform/bootdevice/by-name/nvdata            flags=display="NVDATA";backup=1;subpartitionof=/nvram
-/persist          ext4     /dev/block/platform/bootdevice/by-name/persist           flags=display="Persist";backup=1
 /protect_f        ext4     /dev/block/platform/bootdevice/by-name/protect1          flags=display="Protect_F";backup=1
 /protect_s        ext4     /dev/block/platform/bootdevice/by-name/protect2          flags=display="Protect_S";backup=1
 /audio_dsp        emmc     /dev/block/platform/bootdevice/by-name/audio_dsp
