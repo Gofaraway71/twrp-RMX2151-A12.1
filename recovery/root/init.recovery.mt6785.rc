@@ -1,46 +1,45 @@
-import /init.recovery.microtrust.rc
-
-on init
-    mkdir /mnt/vendor/persist
-    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
-    setprop persist.sys.firstlaunch false
-    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
-    export PATH /sbin:/system/bin:/vendor/bin:/vendor/bin/hw
-
-on fs
-    install_keyring
-    setprop crypto.ready 1
-    write /sys/class/power_supply/usb/otg_switch 1
+import /init.recovery.trustonic.rc
 
 service keystore_auth /system/bin/keystore_auth
     oneshot
     user system
     group root
-    disabled
     seclabel u:r:recovery:s0
 
-service keystore /system/bin/keystore /tmp/misc/keystore
-    user root
-    group root drmrpc readproc
-    disabled
-    seclabel u:r:recovery:s0
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+    setprop crypto.ready 1
 
-service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry \
-    -r /vendor/app/mcRegistry/06090000000000000000000000000000.drbin \
-    -r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin \
-    -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin
-    user root
-    group root
-    disabled
-    seclabel u:r:recovery:s0
+on property:hwservicemanager.ready=true && property:crypto.ready=1
+    start cryptoeng_oplus
+    start keymaster-4-1
+    start gatekeeper-1-0
 
-service keymaster-4-1 /system/bin/android.hardware.keymaster@4.1-service.trustonic
-    user root
-    group root drmrpc
-    disabled
-    seclabel u:r:recovery:s0
+on property:ro.crypto.state=unsupported
+    setprop crypto.ready 0
+    stop cryptoeng_oplus
+    stop mobicore
+    stop keymaster-4-1
+    stop gatekeeper-1-0
 
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+on property:ro.crypto.state=unencrypted
+    setprop crypto.ready 0
+    stop cryptoeng_oplus
+    stop mobicore
+    stop keymaster-4-1
+    stop gatekeeper-1-0
+
+on post-fs-data
+    mkdir /data/vendor_de 0770 system system
+    mkdir /data/vendor_de/0 0770 system system
+    mkdir /data/vendor_de/0/cryptoeng 0770 system system
+
+on boot
+    start health-hal-2-1
+    start init-device-sh
+    start vendor.vibrator-1-0 
+
+service vendor.vibrator-1-0 system/bin/android.hardware.vibrator@1.0-service
     user root
     group root
     disabled
@@ -52,43 +51,28 @@ service init-device-sh /system/bin/init.device.sh
     disabled
     seclabel u:r:recovery:s0
 
-on boot
-    start init-device-sh
-    start vendor.vibrator-1-0 
-    
-service vendor.vibrator-1-0 system/bin/android.hardware.vibrator@1.0-service
+service gatekeeper-1-0 /system/bin/hw/android.hardware.gatekeeper@1.0-service
     user root
     group root
     disabled
     seclabel u:r:recovery:s0
-  
-on property:hwservicemanager.ready=true
-    start mobicore
-    start keymaster-4-1
-    start gatekeeper-1-0
 
-on property:ro.crypto.state=unsupported
+service cryptoeng_oplus /vendor/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+    user root
+    group root input sdcard_rw sdcard_r
+    disabled
+    seclabel u:r:recovery:s0
+
+service keymaster-4-1 /vendor/bin/hw/android.hardware.keymaster@4.1-service.trustonic
+    user root
+    group root drmrpc
+    disabled
+    seclabel u:r:recovery:s0
+
+on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+    setprop crypto.ready 0
+    stop cryptoeng_oplus
     stop mobicore
     stop keymaster-4-1
     stop gatekeeper-1-0
 
-on property:ro.crypto.state=unencrypted
-    stop mobicore
-    stop keymaster-4-1
-    stop gatekeeper-1-0
-
-on property:twrp.decrypt.done=true
-    stop mobicore
-    stop keymaster-4-1
-    stop gatekeeper-1-0
-#    
-on property:enable.fbe.service=0
-    stop mobicore
-    stop keymaster-4-1
-    stop gatekeeperd
-    stop vendor.gatekeeper-1-0    
-
-on property:sys.usb.config=fastboot
-    start servicemanager
-    start hwservicemanager
-    restart fastbootd
