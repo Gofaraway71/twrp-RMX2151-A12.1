@@ -151,6 +151,7 @@ jobs:
     - name: Check Build Branch
       if: ${{ github.event.inputs.MANIFEST_BRANCH == 'twrp-12.1' }}
       run: |
+        rm -rf out/.module_paths
         source build/envsetup.sh
         repopick 5405 5540
       working-directory: ${{ steps.pwd.outputs.pwd }}
