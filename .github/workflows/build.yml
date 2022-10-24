@@ -99,6 +99,7 @@ jobs:
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
         sudo ln -sf ~/bin/repo /usr/bin/repo
+    
       
     - name: Initialize repo
       run: |
@@ -151,13 +152,14 @@ jobs:
     - name: Check Build Branch
       if: ${{ github.event.inputs.MANIFEST_BRANCH == 'twrp-12.1' }}
       run: |
-        rm -rf out
+        
         source build/envsetup.sh
         repopick 5405 5540
       working-directory: ${{ steps.pwd.outputs.pwd }}
 
     - name: Building recovery
       run: |
+        sudo rm -rf out/ 
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
