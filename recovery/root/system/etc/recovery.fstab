@@ -13,18 +13,6 @@ system_ext /system_ext ext4 ro wait,,avb,logical,first_stage_mount
 odm /odm erofs ro wait,,logical,first_stage_mount,nofail
 odm /odm ext4 ro wait,,logical,first_stage_mount,nofail
 
-/my_product /my_product none ro,bind wait,nofail
-/my_engineering /my_engineering none ro,bind wait,nofail
-/my_company /my_company none ro,bind wait,nofail
-/my_carrier /my_carrier none ro,bind wait,nofail
-/my_region /my_region none ro,bind wait,nofail
-/my_heytap /my_heytap none ro,bind wait,nofail
-/my_stock /my_stock none ro,bind wait,nofail
-/my_preload /my_preload none ro,bind wait,nofail
-/my_bigball /my_bigball none ro,bind wait,nofail
-/my_manifest /my_manifest none ro,bind wait,nofail
-
-
 /dev/block/by-name/metadata /metadata ext4 noatime,nosuid,nodev,discard wait,check,formattable,first_stage_mount
 
 /dev/block/by-name/cache /cache ext4 noatime,nosuid,nodev,noauto_da_alloc,discard wait,check,formattable
