@@ -1,11 +1,18 @@
+system          /system                 auto            logical
+vendor          /vendor                 auto            display="Vendor";logical
+product         /product                auto            display="Product";logical
+odm             /odm                    auto            display="ODM";logical
+system_ext      /system_ext             auto            logical
+
 # Block device partitions
 /metadata		ext4	/dev/block/by-name/metadata
-/data			f2fs	/dev/block/by-name/userdata		flags=fileencryption=aes-256-xts:aes-256-cts:1;keydirectory=/metadata/vold/metadata_encryption
+/data			  f2fs	/dev/block/by-name/userdata		flags=fileencryption=aes-256-xts:aes-256-cts:1;keydirectory=/metadata/vold/metadata_encryption
 /cache			ext4	/dev/block/by-name/cache		flags=display="Cache"
-/boot			emmc	/dev/block/by-name/boot			flags=backup=1;flashimg=1
+/boot			  emmc	/dev/block/by-name/boot			flags=backup=1;flashimg=1
 /recovery		emmc	/dev/block/by-name/recovery		flags=backup=1;flashimg=1
-/dtbo			emmc	/dev/block/by-name/dtbo			flags=display="DTBO"
-/vbmeta			emmc	/dev/block/by-name/vbmeta		flags=display="VBMeta";flashimg=1
+/logo       emmc     /dev/block/platform/bootdevice/by-name/logo              flags=display="Logo";backup=1;flashimg=1
+/dtbo			  emmc	/dev/block/by-name/dtbo			flags=display="DTBO"
+vbmeta			emmc	/dev/block/by-name/vbmeta		flags=display="VBMeta";flashimg=1
 /vbmeta_system		emmc	/dev/block/by-name/vbmeta_system	flags=display="VBMeta (System)"
 /vbmeta_vendor		emmc	/dev/block/by-name/vbmeta_vendor	flags=display="VBMeta (Vendor)"
 /misc			emmc	/dev/block/by-name/misc
