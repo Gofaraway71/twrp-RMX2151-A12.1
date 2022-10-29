@@ -29,38 +29,3 @@ PRODUCT_PACKAGES += \
 # MT6762 Init
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/recovery/root/init.recovery.mt6785.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.mt6785.rc
-
-# Gatekeeper
-PRODUCT_PACKAGES += \
-	android.hardware.gatekeeper@1.0-service \
-	android.hardware.gatekeeper@1.0-impl
-
-PRODUCT_COPY_FILES += \
-	$(OUT_DIR)/target/product/RMX2151/vendor/bin/hw/android.hardware.gatekeeper@1.0-service:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.gatekeeper@1.0-service \
-	$(OUT_DIR)/target/product/RMX2151/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl.so
-
-# Additional Libraries
-TARGET_RECOVERY_DEVICE_MODULES += \
-	libkeymaster4 \
-	libpuresoftkeymasterdevice
-
-RECOVERY_LIBRARY_SOURCE_FILES += \
-	$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
-	$(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so
-
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libion
-
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
-
-# Decryption
-PRODUCT_PACKAGES += \
-    qcom_decrypt \
-    qcom_decrypt_fbe
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.crypto.dm_default_key.options_format.version=1 \
-    ro.crypto.volume.filenames_mode=aes-256-cts \
-    ro.crypto.volume.metadata.method=dm-default-key \
-    ro.crypto.volume.options=::v1
