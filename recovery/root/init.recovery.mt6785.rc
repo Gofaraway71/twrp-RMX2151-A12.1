@@ -33,7 +33,6 @@ service vendor.boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
     seclabel u:r:recovery:s0
 
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
-    interface android.hardware.gatekeeper@1.0::IGatekeeper default
     class hal
     user root
     group root
@@ -41,8 +40,6 @@ service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     seclabel u:r:recovery:s0
 
 service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-service.trustonic
-    interface android.hardware.keymaster@4.0::IKeymasterDevice default
-    interface android.hardware.keymaster@4.1::IKeymasterDevice default
     user root
     group root drmrpc
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
