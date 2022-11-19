@@ -16,8 +16,8 @@
 /seccfg          emmc      /dev/block/by-name/seccfg
 /para            emmc      /dev/block/by-name/para
 
-/data            ext4      /dev/block/by-name/userdata    fileencryption=aes-256-xts
-/data            f2fs      /dev/block/by-name/userdata    fileencryption=aes-256-xts
+/data            ext4      /dev/block/by-name/userdata    
+/data            f2fs      /dev/block/by-name/userdata    
 
 /cache            ext4      /dev/block/by-name/cache    flags=backup
 /cache            f2fs      /dev/block/by-name/cache    flags=backup
