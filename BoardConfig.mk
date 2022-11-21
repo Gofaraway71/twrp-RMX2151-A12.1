@@ -18,6 +18,9 @@ DEVICE_PATH := device/realme/RMX2151
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
+
 
 # Architecture
 TARGET_ARCH := arm64
