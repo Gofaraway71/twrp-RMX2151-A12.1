@@ -1,64 +1,70 @@
-import /init.recovery.microtrust.rc
-
-on early-init
-    start adbd
-
-on init
-    # Create a more standard /dev/block layout for our scripts
-    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
-    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
-
-on fs
-    install_keyring
-
-on post-fs
+import /init.recovery.trustonic.rc
 
 service keystore_auth /system/bin/keystore_auth
     oneshot
     user system
     group root
-    disabled
     seclabel u:r:recovery:s0
 
+# keystore is started and stopped on demand by TWRP
 service keystore /system/bin/keystore /tmp/misc/keystore
     user root
-    group root drmrpc readproc
+    group root drmrpc readproc log
     disabled
     seclabel u:r:recovery:s0
 
-service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+    setprop crypto.ready 1
+
+on property:hwservicemanager.ready=true && property:crypto.ready=1
+    start hal_cryptoeng_oppo
+    start keymaster-4-0
+    start gatekeeper-1-0
+
+on property:ro.crypto.state=unsupported
+    setprop crypto.ready 0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeper-1-0
+
+on property:ro.crypto.state=unencrypted
+    setprop crypto.ready 0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeper-1-0
+
+on post-fs-data
+    mkdir /data/vendor_de 0770 system system
+    mkdir /data/vendor_de/0 0770 system system
+    mkdir /data/vendor_de/0/cryptoeng 0770 system system
+
+on boot
+    start health-hal-2-1
+
+service gatekeeper-1-0 /system/bin/hw/android.hardware.gatekeeper@1.0-service
     user root
     group root
     disabled
     seclabel u:r:recovery:s0
 
-service keymaster-4-0-beanpod /vendor/bin/hw/android.hardware.keymaster@4.0-service.beanpod
+service hal_cryptoeng_oppo /vendor/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+    user root
+    group root input sdcard_rw sdcard_r
+    disabled
+    seclabel u:r:recovery:s0
+
+service keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service.trustonic
     user root
     group root drmrpc
     disabled
     seclabel u:r:recovery:s0
 
-on property:hwservicemanager.ready=true
-    write /proc/bootprof "start teei_daemon (on fs)"
-    start teei_daemon
-    write /proc/bootprof "start teei_daemon end (on fs)"
-    start keymaster-4-0-beanpod
-    start gatekeeper-1-0
-
-on property:ro.crypto.state=unsupported
-    stop teei_daemon
-    stop keymaster-4-0-beanpod
+on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+    setprop crypto.ready 0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
     stop gatekeeper-1-0
-
-
-on property:ro.crypto.state=unencrypted
-    stop teei_daemon
-    stop keymaster-4-0-beanpod
-    stop gatekeeper-1-0
-
-
-on property:twrp.decrypt.done=true
-    stop teei_daemon
-    stop keymaster-4-0-beanpod
-    stop gatekeeper-1-0
-
