@@ -1,6 +1,6 @@
 # Block device partitions
 /metadata		ext4	/dev/block/by-name/md_udc
-/data			f2fs	/dev/block/by-name/userdata		flags=fileencryption=aes-256-xts:aes-256-cts:v1;keydirectory=/metadata/vold/metadata_encryption
+/data			ext4	/dev/block/by-name/userdata		flags=fileencryption=aes-256-xts:aes-256-cts:v1;keydirectory=/metadata/vold/metadata_encryption
 /cache			ext4	/dev/block/by-name/cache		flags=display="Cache"
 /boot			emmc	/dev/block/by-name/boot			flags=backup=1;flashimg=1
 /recovery		emmc	/dev/block/by-name/recovery		flags=backup=1;flashimg=1
