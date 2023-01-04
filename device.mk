@@ -10,7 +10,7 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
 # API
-PRODUCT_SHIPPING_API_LEVEL := 29
+PRODUCT_SHIPPING_API_LEVEL := 30
 
 # HACK: Set vendor patch level
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -26,3 +26,8 @@ TARGET_RECOVERY_DEVICE_MODULES += \
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.crypto.volume.metadata.method=dm-default-key \
+    ro.crypto.dm_default_key.options_format.version=1 \
+    ro.crypto.volume.options=::v1
