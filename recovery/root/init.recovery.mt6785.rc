@@ -4,6 +4,8 @@ import /trustonic.rc
 on init
     setprop sys.usb.configfs 1
     setprop sys.usb.ffs.aio_compat 1
+    install_keyring
+    setprop crypto.ready 1    
 
 on fs && property:ro.debuggable=0
     # distinguish USB shoulde connect or not, i.e. CDP vs SDP
@@ -43,32 +45,80 @@ service keystore_auth /system/bin/keystore_auth
     group root
     disabled
     seclabel u:r:recovery:s0
+    
+service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry \
+    -r /vendor/app/mcRegistry/06090000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0    
+    
+service init-device-sh /system/bin/init.device.sh
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0    
+    
+on boot
+    start init-device-sh
+    start vendor.vibrator-1-0     
 
 on fs
     install_keyring
     setprop crypto.ready 1
     start servicemanager
+    
+#Add for OPPO FBE
+service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+    user root
+    group root drmrpc
+    disabled
+    seclabel u:r:recovery:s0      
 
 service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.trustonic
+    user root
+    group root drmrpc
+    disabled
+    seclabel u:r:recovery:s0
 
 on property:hwservicemanager.ready=true
-    start teei_daemon
-    start vendor.keymaster-4-0-beanpod
-    start vendor.gatekeeper-1-0
+    start hal_cryptoeng_oppo
+    start mobicore
+    start keymaster-4-0
+    start gatekeeper-1-0
 
 on property:ro.crypto.state=unsupported
     stop teei_daemon
-    stop vendor.keymaster-4-0-beanpod
-    stop vendor.gatekeeper-1-0
-    
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
+    install_keyring
+    setprop crypto.ready 1     
     stop teei_daemon
-    stop vendor.keymaster-4-0-beanpod
-    stop vendor.gatekeeper-1-0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeper-1-0
 
+on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeper-1-0
+    
+on property:enable.fbe.service=0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop keymaster-4-0
+    stop gatekeeperd
+    stop gatekeeper-1-0    
 
-on property:twrp.decrypt.done=true
-    stop teei_daemon
-    stop vendor.keymaster-4-0-beanpod
-    stop vendor.gatekeeper-1-0
+on property:sys.usb.config=fastboot
+    start servicemanager
+    start hwservicemanager
+    restart fastbootd
