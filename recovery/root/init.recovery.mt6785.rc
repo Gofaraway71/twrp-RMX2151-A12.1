@@ -23,7 +23,7 @@ on post-fs
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
 
 import /vendor/etc/init/android.hardware.gatekeeper@1.0-service.rc
-import /vendor/etc/init/android.hardware.keymaster@4.0-service.beanpod.rc
+import /vendor/etc/init/android.hardware.keymaster@4.0-service.trustonic.rc
 import /vendor/etc/init/microtrust.rc
 #import /system/etc/init/keystore.rc
 
@@ -71,7 +71,7 @@ on fs
     start servicemanager
     
 #Add for OPPO FBE
-service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+service hal_cryptoeng_oppo /system/bin/vendor.oplus.hardware.cryptoeng@1.0-service
     user root
     group root drmrpc
     disabled
