@@ -27,6 +27,10 @@
 
 on early-init
     setprop sys.usb.configfs 0
+    #SDD:add OTG feature for TESSCR-6368 by weike.xu 20210512 start
+    chmod 777 /sys/devices/platform/odm/odm:tran_battery/OTG_CTL
+    write /sys/devices/platform/odm/odm:tran_battery/OTG_CTL "1"
+    #SDD:add OTG feature for TESSCR-6368 by weike.xu 20210512 end
 
 on init
     mkdir /config
