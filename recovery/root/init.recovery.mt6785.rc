@@ -7,13 +7,16 @@ on init
     export LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64:/system/lib64/hw:/sbin
 
 on fs
+    on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring    
     setprop crypto.ready 1
 
 service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
-    class hal
-    user system
+    interface vendor.mediatek.hardware.keymaster_attestation@1.0::IKeymasterDevice default
+    interface vendor.mediatek.hardware.keymaster_attestation@1.1::IKeymasterDevice default
+    user root
     group root
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    disabled
     seclabel u:r:recovery:s0
 
 service wait_for_keymaster /system/bin/wait_for_keymaster
@@ -32,6 +35,19 @@ service vendor.boot-hal-1-2 /vendor/bin/hw/android.hardware.boot@1.2-service
     setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
     seclabel u:r:recovery:s0
 
+service keystore_auth /system/bin/keystore_auth
+    oneshot
+    user system
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service keystore /system/bin/keystore /tmp/misc/keystore
+    user root
+    group root drmrpc readproc log
+    disabled
+    seclabel u:r:recovery:s0
+
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     class hal
     user root
@@ -40,9 +56,11 @@ service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     seclabel u:r:recovery:s0
 
 service keymaster-4-1-trustonic /system/bin/android.hardware.keymaster@4.1-service.trustonic
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    interface android.hardware.keymaster@4.1::IKeymasterDevice default
     user root
     group root drmrpc
-    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    disabled
     seclabel u:r:recovery:s0
 
 on post-fs
@@ -75,11 +93,11 @@ on post-fs-data
     install_keyring
 
 on property:hwservicemanager.ready=true && property:crypto.ready=1
+    start keystore2
     start mobicore
+    start keymaster-4-1
     start gatekeeper-1-0
-    start keymaster-4-1-trustonic
     start keymaster_attestation-1-1
-    start wait_for_keymaster
 
 on property:twrp.all.users.decrypted=true && property:twrp.decrypt.done=true
     setprop crypto.ready 0
