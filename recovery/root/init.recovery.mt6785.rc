@@ -1,6 +1,9 @@
 import /tee.rc
 import /trustonic.rc
 
+on early-init
+    start adbd
+ 
 on init
     wait /dev/block/platform/bootdevice
     symlink /dev/block/platform/bootdevice /dev/block/bootdevice
@@ -12,8 +15,6 @@ on fs
     setprop crypto.ready 1
 
 service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
-    interface vendor.mediatek.hardware.keymaster_attestation@1.0::IKeymasterDevice default
-    interface vendor.mediatek.hardware.keymaster_attestation@1.1::IKeymasterDevice default
     user root
     group root
     disabled
@@ -95,7 +96,7 @@ on post-fs-data
 on property:hwservicemanager.ready=true && property:crypto.ready=1
     start keystore2
     start mobicore
-    start keymaster-4-1
+    start keymaster-4-1-trustonic
     start gatekeeper-1-0
     start keymaster_attestation-1-1
 
